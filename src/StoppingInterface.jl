@@ -1,6 +1,6 @@
 module StoppingInterface
 
-using Stopping
+using LinearAlgebra, Stopping
 
 using SolverTools
 include("stopping_to_jso_stats.jl")
