@@ -6,7 +6,7 @@ ipopt(nlp) DOESN'T CHECK THE WRONG KWARGS, AND RETURN AN ERROR.
 ipopt(::NLPStopping)
 
 """
-function ipopt(stp :: NLPStopping) #kwargs
+function NLPModelsIpopt.ipopt(stp :: NLPStopping; kwargs...)
 
  #xk = solveIpopt(stop.pb, stop.current_state.x)
  nlp = stp.pb
@@ -17,7 +17,8 @@ function ipopt(stp :: NLPStopping) #kwargs
                     max_cpu_time    = stp.meta.max_time,
                     dual_inf_tol    = stp.meta.atol,
                     constr_viol_tol = stp.meta.atol,
-                    compl_inf_tol   = stp.meta.atol)
+                    compl_inf_tol   = stp.meta.atol,
+                    kwargs...)
 
  #Update the meta boolean with the output message
  if stats.status == :first_order stp.meta.suboptimal      = true end
@@ -33,7 +34,7 @@ function ipopt(stp :: NLPStopping) #kwargs
  x = stats.solution
 
  #Not mandatory, but in case some entries of the State are used to stop
- fill_in!(stp, x) #too slow
+ #fill_in!(stp, x) #too slow
 
  stop!(stp)
 
