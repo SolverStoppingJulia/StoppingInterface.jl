@@ -108,36 +108,36 @@ function knitro(stp          :: NLPStopping;
                 outlev       :: Int  = 0,
                 kwargs...)
     
-    @assert -1 ≤ convex ≤ 1
-    @assert 1  ≤ hessopt ≤ 7            
-    @assert 0  ≤ out_hints ≤ 1
-    @assert 0  ≤ outlev ≤ 6
-    @assert 0  ≤ maxit
+  @assert -1 ≤ convex ≤ 1
+  @assert 1  ≤ hessopt ≤ 7            
+  @assert 0  ≤ out_hints ≤ 1
+  @assert 0  ≤ outlev ≤ 6
+  @assert 0  ≤ maxit
     
-    nlp = stp.pb
-    #y0 = stp.current_state.lambda #si défini
-    #z0 = stp.current_state.mu #si défini 
-    stats = knitro(nlp, x0           = stp.current_state.x,
-                        objrange     = objrange,
-                        feastol      = feastol,
-                        feastol_abs  = feastol_abs,
-                        opttol       = opttol,
-                        opttol_abs   = opttol_abs,
-                        maxfevals    = maxfevals,
-                        maxit        = maxit,
-                        maxtime_real = maxtime_real,
-                        out_hints    = out_hints,
-                        outlev       = outlev;
-                        kwargs...)
+  nlp = stp.pb
+  #y0 = stp.current_state.lambda #si défini
+  #z0 = stp.current_state.mu #si défini 
+  stats = knitro(nlp, x0           = stp.current_state.x,
+                      objrange     = objrange,
+                      feastol      = feastol,
+                      feastol_abs  = feastol_abs,
+                      opttol       = opttol,
+                      opttol_abs   = opttol_abs,
+                      maxfevals    = maxfevals,
+                      maxit        = maxit,
+                      maxtime_real = maxtime_real,
+                      out_hints    = out_hints,
+                      outlev       = outlev;
+                      kwargs...)
     
-    if stats.status ∈ (:first_order, :acceptable) 
-       stp.meta.optimal = true
+  if stats.status ∈ (:first_order, :acceptable) 
+    #stp.meta.optimal = true
        
-       stp.current_state.x  = stats.solution
-       stp.current_state.fx = stats.objective
-       stp.current_state.gx = grad(nlp, stats.solution)#stats.dual_feas
-       stp.current_state.current_score  = norm(stp.current_state.gx, Inf)#stats.dual_feas #TODO: this is for unconstrained problem!!
-    elseif stats.status == :stalled
+    stp.current_state.x  = stats.solution
+    stp.current_state.fx = stats.objective
+    stp.current_state.gx = grad(nlp, stats.solution)#stats.dual_feas
+    stp.current_state.current_score  = norm(stp.current_state.gx, Inf)#stats.dual_feas #TODO: this is for unconstrained problem!!
+#=    elseif stats.status == :stalled
         stp.meta.stalled = true
     elseif stats.status == :infeasible
         stp.meta.infeasible = true
@@ -151,7 +151,9 @@ function knitro(stp          :: NLPStopping;
         stp.meta.resources = true
     else #stats.status ∈ (:exception, :unknown)  
         stp.meta.fail_sub_pb
-    end
-    
-    return stp
+=#
+  end
+  #Update the meta boolean with the output message
+  stp = stats_status_to_meta!(stp, stats)
+  return stp
 end
