@@ -105,7 +105,7 @@ function knitro(stp          :: NLPStopping;
                 maxit        :: Int  = 0, #stp.meta.max_iter
                 maxtime_real :: Real = stp.meta.max_time,
                 out_hints    :: Int  = 0,
-                outlev       :: Int  = 0,
+                outlev       :: Int  = 2,
                 kwargs...)
     
   @assert -1 ≤ convex ≤ 1
@@ -143,6 +143,7 @@ function knitro(stp          :: NLPStopping;
 
   if status(stp) == :Unknown
     @warn "Error in StoppingInterface statuses: return status is $(stats.status)"
+    print(stats)
   end
 
   return stp
