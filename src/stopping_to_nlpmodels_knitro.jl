@@ -130,9 +130,7 @@ function knitro(stp          :: NLPStopping;
                       outlev       = outlev;
                       kwargs...)
     
-  if stats.status ∈ (:first_order, :acceptable) 
-    #stp.meta.optimal = true
-       
+  if stats.status ∉ (:infeasible, :unbounded, :exception, :unknwon) #∈ (:first_order, :acceptable) 
     stp.current_state.x  = stats.solution
     stp.current_state.fx = stats.objective
     stp.current_state.gx = grad(nlp, stats.solution)#stats.dual_feas
@@ -146,5 +144,5 @@ function knitro(stp          :: NLPStopping;
     print(stats)
   end
 
-  return stp
+  return stp #would be better to return the stats somewhere
 end
