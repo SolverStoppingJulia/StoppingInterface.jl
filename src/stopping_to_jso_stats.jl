@@ -53,7 +53,7 @@ function stats_status_to_meta!(stp    :: AbstractStopping,
   if status == :acceptable  stp.meta.suboptimal      = true end
   if status == :infeasible  stp.meta.infeasible      = true end
   if status == :small_step  stp.meta.stalled         = true end
-  if status == :max_eval    stp.meta.max_eval        = true end
+  if status == :max_eval    stp.meta.resources       = true end
   if status == :max_iter    stp.meta.iteration_limit = true end
   if status == :max_time    stp.meta.tired           = true end
   if status ∈ [:neg_pred, 

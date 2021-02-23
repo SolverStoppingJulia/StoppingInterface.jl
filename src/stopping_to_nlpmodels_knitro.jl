@@ -137,23 +137,13 @@ function knitro(stp          :: NLPStopping;
     stp.current_state.fx = stats.objective
     stp.current_state.gx = grad(nlp, stats.solution)#stats.dual_feas
     stp.current_state.current_score  = norm(stp.current_state.gx, Inf)#stats.dual_feas #TODO: this is for unconstrained problem!!
-#=    elseif stats.status == :stalled
-        stp.meta.stalled = true
-    elseif stats.status == :infeasible
-        stp.meta.infeasible = true
-    elseif stats.status == :unbounded
-        stp.meta.unbounded = true
-    elseif stats.status == :max_iter
-        stp.meta.iteration_limit = true
-    elseif stats.status == :max_time
-        stp.meta.tired = true
-    elseif stats.status == :max_eval  
-        stp.meta.resources = true
-    else #stats.status ∈ (:exception, :unknown)  
-        stp.meta.fail_sub_pb
-=#
   end
   #Update the meta boolean with the output message
   stp = stats_status_to_meta!(stp, stats)
+
+  if status(stp) == :Unknown
+    @warn "Error in StoppingInterface statuses: return status is $(stats.status)"
+  end
+
   return stp
 end

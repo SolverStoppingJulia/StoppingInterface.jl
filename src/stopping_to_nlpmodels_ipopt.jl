@@ -40,13 +40,17 @@ function NLPModelsIpopt.ipopt(stp :: NLPStopping; kwargs...)
   =#
   stp = stats_status_to_meta!(stp, stats)
 
+  if status(stp) == :Unknown
+    @warn "Error in StoppingInterface statuses: return status is $(stats.status)"
+  end
+
   stp.meta.nb_of_stop = stats.iter
   #stats.elapsed_time
 
   x = stats.solution
 
   #Not mandatory, but in case some entries of the State are used to stop
-  #fill_in!(stp, x) #too slow
+  fill_in!(stp, x) #too slow
 
   stop!(stp)
 
