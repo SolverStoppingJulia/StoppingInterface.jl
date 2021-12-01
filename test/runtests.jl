@@ -1,6 +1,7 @@
 using LinearAlgebra, Test
 #JSO packages
-using NLPModels, NLPModelsIpopt, NLPModelsKnitro, SolverTools
+using ADNLPModels, NLPModels, NLPModelsIpopt, SolverTools
+# , NLPModelsKnitro
 #This package
 using Stopping, StoppingInterface
 
@@ -21,12 +22,12 @@ using Stopping, StoppingInterface
     @test stop!(stp)
     @test status_stopping_to_stats(stp) == :max_iter
 
-    reinit!(stp)
-    stp = knitro(stp)
-    @show status(stp), stp.current_state.x
+    # reinit!(stp)
+    # stp = knitro(stp)
+    # @show status(stp), stp.current_state.x
     reinit!(stp)
     stp = ipopt(stp)
-    @show status(stp), stp.current_state.x
+    @test status(stp) == :Optimal
 end
 
 @testset "GSE status to meta" begin
