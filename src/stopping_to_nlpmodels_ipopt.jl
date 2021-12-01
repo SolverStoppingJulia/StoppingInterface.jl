@@ -2,23 +2,24 @@ import NLPModelsIpopt: ipopt
 
 """
 ipopt(nlp) DOESN'T CHECK THE WRONG KWARGS, AND RETURN AN ERROR.
-
 ipopt(::NLPStopping)
-
 """
-function NLPModelsIpopt.ipopt(stp :: NLPStopping; kwargs...)
+function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
 
   #xk = solveIpopt(stop.pb, stop.current_state.x)
   nlp = stp.pb
-  stats = ipopt(nlp, print_level     = 0,
-                      tol             = stp.meta.rtol,
-                      x0              = stp.current_state.x,
-                      max_iter        = stp.meta.max_iter,
-                      max_cpu_time    = stp.meta.max_time,
-                      dual_inf_tol    = stp.meta.atol,
-                      constr_viol_tol = stp.meta.atol,
-                      compl_inf_tol   = stp.meta.atol,
-                      kwargs...)
+  stats = ipopt(
+    nlp,
+    print_level = 0,
+    tol = stp.meta.rtol,
+    x0 = stp.current_state.x,
+    max_iter = stp.meta.max_iter,
+    max_cpu_time = stp.meta.max_time,
+    dual_inf_tol = stp.meta.atol,
+    constr_viol_tol = stp.meta.atol,
+    compl_inf_tol = stp.meta.atol,
+    kwargs...,
+  )
 
   #Update the meta boolean with the output message
   #=
@@ -42,6 +43,7 @@ function NLPModelsIpopt.ipopt(stp :: NLPStopping; kwargs...)
 
   if status(stp) == :Unknown
     @warn "Error in StoppingInterface statuses: return status is $(stats.status)"
+    @show stats.solver_specific
   end
 
   stp.meta.nb_of_stop = stats.iter
