@@ -12,8 +12,8 @@ makedocs(
     assets = ["assets/style.css"],
     prettyurls = get(ENV, "CI", nothing) == "true",
   ),
-  sitename = "StoppingInterface",
+  sitename = "StoppingInterface.jl",
   pages = ["Home" => "index.md", "Tutorial" => "tutorial.md", "Reference" => "reference.md"],
 )
 
-deploydocs(repo = "github.com/tmigot/StoppingInterface.git", devbranch = "main")
+deploydocs(repo = "github.com/tmigot/StoppingInterface.jl.git", devbranch = "main")
