@@ -15,9 +15,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [extras]
 ADNLPModels = "54578032-b7ea-4c30-94aa-7cbd1cce6c9a"
-KNITRO = "67920dd8-b58e-52a8-8622-53c4cffbe346"
-NLPModelsKnitro = "bec4dd0d-7755-52d5-9a02-22f0ffc7efcb"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["ADNLPModels", "KNITRO", "NLPModelsKnitro", "Test"]
+test = ["ADNLPModels", "Test"]
