@@ -2,7 +2,7 @@ module StoppingInterface
 
   using LinearAlgebra, Stopping
 
-  using SolverTools
+  using SolverCore
   include("stopping_to_jso_stats.jl")
   export status_stopping_to_stats, stopping_to_stats
 
@@ -10,8 +10,7 @@ module StoppingInterface
   include("stopping_to_nlpmodels_ipopt.jl")
   export ipopt
 
-  using NLPModelsKnitro
+  using Requires
   include("stopping_to_nlpmodels_knitro.jl")
-  export knitro
 
 end # module
