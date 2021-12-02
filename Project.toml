@@ -14,7 +14,12 @@ Stopping = "c4fe5a9e-e7fb-5c3d-89d5-7f405ab2214f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
+NLPModels = "0.17"
+NLPModelsIpopt = "0.7"
+Requires = "1"
 SolverCore = "0.2"
+SolverTools = "0.7"
+Stopping = "0.3"
 
 [extras]
 ADNLPModels = "54578032-b7ea-4c30-94aa-7cbd1cce6c9a"
