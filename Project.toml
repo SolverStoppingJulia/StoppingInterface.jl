@@ -17,6 +17,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 NLPModels = "0.17"
 NLPModelsIpopt = "0.7"
 Requires = "1"
+SolverCore = "0.2"
 SolverTools = "0.7"
 Stopping = "0.3"
 
