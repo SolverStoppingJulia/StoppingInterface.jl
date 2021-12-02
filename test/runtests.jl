@@ -1,6 +1,6 @@
 using LinearAlgebra, Test
 #JSO packages
-using ADNLPModels, NLPModels, NLPModelsIpopt, SolverTools
+using ADNLPModels, NLPModels, NLPModelsIpopt
 # , NLPModelsKnitro
 #This package
 using Stopping, StoppingInterface
