@@ -13,6 +13,9 @@ SolverTools = "b5612192-2639-5dc1-abfe-fbedd65fab29"
 Stopping = "c4fe5a9e-e7fb-5c3d-89d5-7f405ab2214f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
+[compat]
+SolverCore = "0.2"
+
 [extras]
 ADNLPModels = "54578032-b7ea-4c30-94aa-7cbd1cce6c9a"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
