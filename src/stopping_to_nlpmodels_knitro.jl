@@ -76,7 +76,7 @@ xtol: The optimization process will terminate if the relative change of the
 xtol_iters: Number of consecutive iterations where change of the solution point 
             estimate is less than xtol before Knitro stops.
             Default is 1
-            
+
 *Output options*
 out_hints: Print diagnostic hints (e.g. on user option settings) after solving
            0 no prints, and 1 prints (default in Knitro)
