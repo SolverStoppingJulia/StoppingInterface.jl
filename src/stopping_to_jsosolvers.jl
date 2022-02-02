@@ -3,7 +3,6 @@ for fun in (:lbfgs, :trunk, :tron)
   premeth = Meta.parse("JSOSolvers." * string(fun))
   @eval begin
     function $premeth(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)
-
       max_ev = if :neval_obj in keys(stp.meta.max_cntrs)
         stp.meta.max_cntrs[:neval_obj]
       else
