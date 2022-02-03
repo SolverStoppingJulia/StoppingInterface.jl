@@ -4,8 +4,26 @@ using ADNLPModels, NLPModels, NLPModelsIpopt
 # , NLPModelsKnitro
 #This package
 using Stopping, StoppingInterface
+using BenchmarkTools
 
-@test true
+include("utils.jl")
+
+for solver in (ipopt, lbfgs, trunk, tron)
+  @testset "Compute overhead of using Stopping with $(string(solver))" begin
+    T = Float64
+    n = 100
+    function f(x)
+      n = length(x)
+      return 100 * sum((x[i + 1] - x[i]^2)^2 for i = 1:(n - 1)) + sum((x[i] - 1)^2 for i = 1:(n - 1))
+    end
+    x0 = T.([i / (n + 1) for i = 1:n])
+    nlp = ADNLPModel(f, x0, name = "genrose")
+    tstp, tnlp = stopping_overhead(nlp, solver)
+    median_overhead = (median(tstp).time - median(tnlp).time) # result in nanoseconds
+    @show median_overhead / 1e9 # in seconds
+    @test median_overhead < 0.05 * median(tnlp).time
+  end
+end
 
 @testset "Rosenbrock with ∑x = 1" begin
   nlp = ADNLPModel(
