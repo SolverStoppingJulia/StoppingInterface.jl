@@ -5,8 +5,6 @@ using ADNLPModels, NLPModels, NLPModelsIpopt
 #This package
 using Stopping, StoppingInterface
 
-@test true
-
 @testset "Rosenbrock with ∑x = 1" begin
   nlp = ADNLPModel(
     x -> (x[1] - 1.0)^2 + 100 * (x[2] - x[1]^2)^2,
@@ -35,16 +33,19 @@ using Stopping, StoppingInterface
   @test status(stp) == :Optimal
 end
 
-for solver in (:lbfgs, :tron, :trunk, :ipopt)
-  @testset "Rosenbrock with $solver" begin
-    nlp = ADNLPModel(x -> (x[1] - 1.0)^2 + 100 * (x[2] - x[1]^2)^2, [-1.2; 1.0])
-    sol = ones(2)
+for solver in (:lbfgs, :tron, :trunk, :ipopt), T in (Float32, Float64)
+  @testset "Rosenbrock with $solver for T=$T" begin
+    if solver == :ipopt && T != Float64
+      continue
+    end
+    nlp = ADNLPModel(x -> (x[1] - 1)^2 + 100 * (x[2] - x[1]^2)^2, T[-1.2; 1.0])
+    sol = ones(T, 2)
     stp = NLPStopping(nlp)
     @test status_stopping_to_stats(stp) == :unknown
     fill_in!(stp, sol)
     @test stop!(stp)
     status_stopping_to_stats(stp) == :first_order
-    reinit!(stp, rstate = true, x = zeros(2))
+    reinit!(stp, rstate = true, x = zeros(T, 2))
     stp.meta.nb_of_stop = stp.meta.max_iter + 1
     fill_in!(stp, stp.current_state.x)
     @test stop!(stp)
@@ -54,6 +55,7 @@ for solver in (:lbfgs, :tron, :trunk, :ipopt)
     # stp = knitro(stp)
     # @show status(stp), stp.current_state.x
     reinit!(stp)
+    stp.meta.atol = sqrt(eps(T))
     stp = eval(solver)(stp)
     @test status(stp) == :Optimal
   end

@@ -10,11 +10,12 @@ for fun in (:lbfgs, :trunk, :tron)
       end
 
       nlp = stp.pb
+      T = eltype(nlp.meta.x0)
       stats = $fun(
         nlp,
         verbose = subsolver_verbose,
-        atol = stp.meta.atol,
-        rtol = stp.meta.rtol,
+        atol = T(stp.meta.atol),
+        rtol = T(stp.meta.rtol),
         x = stp.current_state.x,
         # max_iter = stp.meta.max_iter,
         max_time = stp.meta.max_time,
