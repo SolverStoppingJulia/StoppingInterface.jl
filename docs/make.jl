@@ -16,4 +16,4 @@ makedocs(
   pages = ["Home" => "index.md", "Tutorial" => "tutorial.md", "Reference" => "reference.md"],
 )
 
-deploydocs(repo = "github.com/tmigot/StoppingInterface.jl.git", devbranch = "main")
+deploydocs(repo = "github.com/SolverStoppingJulia/StoppingInterface.jl.git", devbranch = "main")
