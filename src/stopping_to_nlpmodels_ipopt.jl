@@ -52,7 +52,7 @@ function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
   x = stats.solution
 
   #Not mandatory, but in case some entries of the State are used to stop
-  fill_in!(stp, x) #too slow
+  fill_in!(stp, x, Hx = stp.current_state.Hx) #too slow
 
   stop!(stp)
 
