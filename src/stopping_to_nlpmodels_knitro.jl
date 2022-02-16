@@ -110,7 +110,7 @@ outlev: Controls the level of output produced by Knitro
         maxit::Int = 0, #stp.meta.max_iter
         maxtime_real::Real = stp.meta.max_time,
         out_hints::Int = 0,
-        outlev::Int = 0, #1 to see everything
+        subsolver_verbose::Int = 0, #1 to see everything
         algorithm::Int = 0, # *New* 2
         ftol::Real = 1.0e-15, # *New*
         ftol_iters::Int = 5, # *New*
@@ -121,7 +121,7 @@ outlev: Controls the level of output produced by Knitro
         @assert -1 ≤ convex ≤ 1
         @assert 1 ≤ hessopt ≤ 7
         @assert 0 ≤ out_hints ≤ 1
-        @assert 0 ≤ outlev ≤ 6
+        @assert 0 ≤ subsolver_verbose ≤ 6
         @assert 0 ≤ maxit
 
         nlp = stp.pb
@@ -144,7 +144,7 @@ outlev: Controls the level of output produced by Knitro
           ftol_iters = ftol_iters,
           xtol = xtol,
           xtol_iters = xtol_iters,
-          outlev = outlev;
+          outlev = subsolver_verbose;
           kwargs...,
         )
         stats = NLPModelsKnitro.knitro!(nlp, solver)
