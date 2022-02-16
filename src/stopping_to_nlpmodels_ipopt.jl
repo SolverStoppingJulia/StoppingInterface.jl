@@ -9,7 +9,7 @@ function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
   #xk = solveIpopt(stop.pb, stop.current_state.x)
   nlp = stp.pb
   stats = ipopt(
-    nlp,
+    nlp;
     print_level = 0,
     tol = stp.meta.rtol,
     x0 = stp.current_state.x,
