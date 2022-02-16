@@ -4,13 +4,13 @@ import NLPModelsIpopt: ipopt
 ipopt(nlp) DOESN'T CHECK THE WRONG KWARGS, AND RETURN AN ERROR.
 ipopt(::NLPStopping)
 """
-function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
+function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)
 
   #xk = solveIpopt(stop.pb, stop.current_state.x)
   nlp = stp.pb
   stats = ipopt(
-    nlp,
-    print_level = 0,
+    nlp;
+    print_level = subsolver_verbose,
     tol = stp.meta.rtol,
     x0 = stp.current_state.x,
     max_iter = stp.meta.max_iter,

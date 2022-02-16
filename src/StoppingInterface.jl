@@ -15,6 +15,7 @@ include("stopping_to_nlpmodels_ipopt.jl")
 export ipopt
 
 using Requires
+is_knitro_installed = false
 include("stopping_to_nlpmodels_knitro.jl")
 
 end # module
