@@ -8,6 +8,7 @@ This function calls `fill_in!` (doesn't update hessian) and `stop!` after `ipopt
 
 `subsolver_verbose` corresponds to `print_level` argument in `ipopt`.
 Other keyword arguments are passed to the `ipopt` call.
+Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPTIONS_REF).
 """
 function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)
 
