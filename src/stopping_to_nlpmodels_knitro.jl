@@ -93,9 +93,17 @@ outlev: Controls the level of output produced by Knitro
       import NLPModelsKnitro: knitro
 
       """
-      knitro(nlp) DOESN'T CHECK THE WRONG KWARGS, AND RETURN AN ERROR.
-      knitro(::NLPStopping)
-      Selection of possible [options](https://www.artelys.com/docs/knitro/3_referenceManual/userOptions.html):
+          `knitro(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
+
+      Stopping-version of the `knitro` function from NLPModelsKnitro.jl.
+      This function calls `stop!` after `knitro` call.
+      Use the `KnitroSolver` structure to fill-in the gradient and objective in the state.
+
+      `subsolver_verbose` corresponds to `print_level` argument in `knitro`.
+      Other keyword arguments are passed to the `knitro` call.
+      Selection of possible [options](https://www.artelys.com/docs/knitro/3_referenceManual/userOptions.html).
+
+      It requires `using KNITRO, NLPModelsKnitro`.
       """
       function NLPModelsKnitro.knitro(
         stp::NLPStopping;

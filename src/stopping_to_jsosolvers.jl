@@ -2,6 +2,13 @@ import JSOSolvers: lbfgs, trunk, tron
 for fun in (:lbfgs, :trunk, :tron)
   premeth = Meta.parse("JSOSolvers." * string(fun))
   @eval begin
+    @doc """
+        `$($fun)(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
+
+    Stopping-version of the $($fun) function from JSOSolvers.jl.
+    This function calls `fill_in!` (doesn't update hessian) and `stop!` after $($fun) call.
+    The keyword arguments are passed to the $($fun) call.
+    """
     function $premeth(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)
       max_ev = if :neval_obj in keys(stp.meta.max_cntrs)
         stp.meta.max_cntrs[:neval_obj]

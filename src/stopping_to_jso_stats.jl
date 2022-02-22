@@ -1,5 +1,7 @@
 """
-Return the status in GenericStats from a Stopping.
+    `status_stopping_to_stats(stp::AbstractStopping)`
+
+Return the status in GenericExecutionStats from a Stopping.
 """
 function status_stopping_to_stats(stp::AbstractStopping)
   stp_status = status(stp)
@@ -11,9 +13,7 @@ function status_stopping_to_stats(stp::AbstractStopping)
     (:UnboundedPb, :unbounded),
     (:Stalled, :stalled),
     (:IterationLimit, :max_iter),
-    (:Tired, :max_time), #disapear from Stopping.jl#v0.2.5
     (:TimeLimit, :max_time),
-    (:ResourcesExhausted, :max_eval), #disapear from Stopping.jl#v0.2.5
     (:EvaluationLimit, :max_eval),
     (:ResourcesOfMainProblemExhausted, :max_eval),
     (:Infeasible, :infeasible),
@@ -26,6 +26,8 @@ function status_stopping_to_stats(stp::AbstractStopping)
 end
 
 """
+    `stopping_to_stats(stp::NLPStopping)`
+
 Initialize a GenericStats from Stopping
 """
 function stopping_to_stats(stp::NLPStopping)
