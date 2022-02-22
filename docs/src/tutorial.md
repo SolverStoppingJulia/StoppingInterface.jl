@@ -80,8 +80,9 @@ stop.current_state.x, status(stop), stop.meta.nb_of_stop
 
 In a second scenario, we check the control on the maximum number of iterations.
 ```@example 1
+nbiter = stop.meta.nb_of_stop
 reinit!(stop, rstate = true, x = nlp.meta.x0) #rstate is set as true to allow reinit! modifying the State
-stop.meta.max_iter = max(nbiter-4,1)
+stop.meta.max_iter = max(nbiter - 4, 1)
 
 solveIpopt(stop)
 # Final status is :IterationLimit
