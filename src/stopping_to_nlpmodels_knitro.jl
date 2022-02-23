@@ -175,8 +175,6 @@ outlev: Controls the level of output produced by Knitro
 
         return stp #would be better to return the stats somewhere
       end
-
-      export knitro
     end
   end
 end

@@ -8,11 +8,9 @@ export status_stopping_to_stats, stopping_to_stats
 
 using JSOSolvers, NLPModels
 include("stopping_to_jsosolvers.jl")
-export lbfgs, tron, trunk
 
 using NLPModelsIpopt
 include("stopping_to_nlpmodels_ipopt.jl")
-export ipopt
 
 using Requires
 is_knitro_installed = false
