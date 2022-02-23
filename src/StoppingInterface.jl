@@ -6,7 +6,7 @@ using SolverCore
 include("stopping_to_jso_stats.jl")
 export status_stopping_to_stats, stopping_to_stats
 
-using JSOSolvers
+using JSOSolvers, NLPModels
 include("stopping_to_jsosolvers.jl")
 export lbfgs, tron, trunk
 
