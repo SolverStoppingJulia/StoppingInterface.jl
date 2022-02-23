@@ -16,10 +16,12 @@ for fun in (:lbfgs, :trunk, :tron)
         typemax(Int)
       end
 
+      stp.meta.start_time = time()
+
       nlp = stp.pb
       T = eltype(nlp.meta.x0)
       stats = $fun(
-        nlp,
+        nlp;
         verbose = subsolver_verbose,
         atol = T(stp.meta.atol),
         rtol = T(stp.meta.rtol),

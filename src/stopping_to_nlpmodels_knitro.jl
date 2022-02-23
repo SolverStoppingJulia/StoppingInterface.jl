@@ -132,6 +132,7 @@ outlev: Controls the level of output produced by Knitro
         @assert 0 ≤ subsolver_verbose ≤ 6
         @assert 0 ≤ maxit
 
+        stp.meta.start_time = time()
         nlp = stp.pb
         #y0 = stp.current_state.lambda #si défini
         #z0 = stp.current_state.mu #si défini 
@@ -175,8 +176,6 @@ outlev: Controls the level of output produced by Knitro
 
         return stp #would be better to return the stats somewhere
       end
-
-      export knitro
     end
   end
 end
