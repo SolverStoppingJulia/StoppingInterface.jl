@@ -29,7 +29,7 @@ using Stopping, StoppingInterface
   # stp = knitro(stp)
   # @show status(stp), stp.current_state.x
   reinit!(stp)
-  stp = ipopt(stp)
+  stp = StoppingInterface.ipopt(stp)
   @test status(stp) == :Optimal
 end
 
@@ -56,7 +56,7 @@ for solver in (:lbfgs, :tron, :trunk, :ipopt), T in (Float32, Float64)
     # @show status(stp), stp.current_state.x
     reinit!(stp)
     stp.meta.atol = sqrt(eps(T))
-    stp = eval(solver)(stp)
+    stp = StoppingInterface.eval(solver)(stp)
     @test status(stp) == :Optimal
   end
 end
