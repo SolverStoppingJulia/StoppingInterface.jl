@@ -38,7 +38,8 @@ function stopping_to_stats(stp::NLPStopping)
     stp.pb,
     solution = stp.current_state.x,
     objective = stp.current_state.fx,
-    primal_feas = get_ncon(nlp) == 0 ? zero(eltype(cx)) : maximum(max.(cx - get_ucon(nlp), get_lcon(nlp) - cx, 0)),
+    primal_feas = get_ncon(nlp) == 0 ? zero(eltype(cx)) :
+                  maximum(max.(cx - get_ucon(nlp), get_lcon(nlp) - cx, 0)),
     dual_feas = norm(stp.current_state.current_score, Inf), # stp.current_state.res
     multipliers = stp.current_state.lambda,
     iter = stp.meta.nb_of_stop,

@@ -11,7 +11,6 @@ Other keyword arguments are passed to the `ipopt` call.
 Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPTIONS_REF).
 """
 function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)
-
   stp.meta.start_time = time()
   #xk = solveIpopt(stop.pb, stop.current_state.x)
   nlp = stp.pb
