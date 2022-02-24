@@ -10,7 +10,13 @@ for fun in (:lbfgs, :trunk, :tron)
     if the problem is a success (`:first_order` or `:acceptable`) and `fill_in_on_success` is true or if it failed and `fill_in_on_failure` is true.
     The keyword arguments are passed to the $($fun) call.
     """
-    function $premeth(stp::NLPStopping; subsolver_verbose::Int = 0, fill_in_on_success = true, fill_in_on_failure = true, kwargs...)
+    function $premeth(
+      stp::NLPStopping;
+      subsolver_verbose::Int = 0,
+      fill_in_on_success = true,
+      fill_in_on_failure = true,
+      kwargs...,
+    )
       max_ev = if :neval_obj in keys(stp.meta.max_cntrs)
         stp.meta.max_cntrs[:neval_obj]
       else
