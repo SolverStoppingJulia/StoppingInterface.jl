@@ -164,6 +164,17 @@ outlev: Controls the level of output produced by Knitro
         stp.current_state.gx = KNITRO.KN_get_objgrad_values(solver.kc)[2]
         #norm(stp.current_state.gx, Inf)#stats.dual_feas #TODO: this is for unconstrained problem!!
         stp.current_state.mu = stats.multipliers_L
+        if stp.pb.meta.ncon > 0
+          stp.current_state.cx = KNITRO.KN_get_con_values(solver.kc)
+          stp.current_state.Jx = sparse(
+            KNITRO.KN_get_jacobian_values(solver.kc)[1],
+            KNITRO.KN_get_jacobian_values(solver.kc)[2],
+            KNITRO.KN_get_jacobian_values(solver.kc)[3],
+            stp.pb.meta.ncon,
+            stp.pb.meta.nvar,
+          )
+          stp.current_state.lambda = stats.multipliers
+        end
         stp.current_state.current_score = max(stats.dual_feas, stats.primal_feas)
         #end
         #Update the meta boolean with the output message
