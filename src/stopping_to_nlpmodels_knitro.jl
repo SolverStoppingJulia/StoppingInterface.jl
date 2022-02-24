@@ -96,7 +96,7 @@ outlev: Controls the level of output produced by Knitro
           `knitro(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
 
       Stopping-version of the `knitro` function from NLPModelsKnitro.jl.
-      This function calls `stop!` after `knitro` call.
+      This function doesn't calls `stop!` after `knitro` call.
       Use the `KnitroSolver` structure to fill-in the gradient and objective in the state.
 
       `subsolver_verbose` corresponds to `print_level` argument in `knitro`.
@@ -173,6 +173,9 @@ outlev: Controls the level of output produced by Knitro
           @warn "Error in StoppingInterface statuses: return status is $(stats.status)"
           #print(stats)
         end
+
+        stp.meta.nb_of_stop = stats.iter
+        Stopping._update_time!(stp.current_state, time()) # stats.elapsed_time
 
         return stp #would be better to return the stats somewhere
       end
