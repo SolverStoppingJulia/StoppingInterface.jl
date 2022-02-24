@@ -4,13 +4,14 @@ import NLPModelsIpopt: ipopt
     `ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
 
 Stopping-version of the `ipopt` function from NLPModelsIpopt.jl.
-This function calls `fill_in!` (doesn't update hessian) and `stop!` after `ipopt` call.
+This function calls `fill_in!` (doesn't update hessian) and `stop!` after `ipopt` call,
+if the problem is a success (`:first_order` or `:acceptable`) and `fill_in_on_success` is true or if it failed and `fill_in_on_failure` is true.
 
 `subsolver_verbose` corresponds to `print_level` argument in `ipopt`.
 Other keyword arguments are passed to the `ipopt` call.
 Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPTIONS_REF).
 """
-function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)
+function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, fill_in_on_success = true, fill_in_on_failure = true, kwargs...)
   stp.meta.start_time = time()
   #xk = solveIpopt(stop.pb, stop.current_state.x)
   nlp = stp.pb
@@ -43,7 +44,7 @@ function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwar
   if stats.status ∈ [:stalled, 
                      :small_residual,
                      :small_step]   stp.meta.stalled       = true end
-  #if stats.status == :exception   stp.meta.exception       = true end #available ≥ 0.2.6
+  #if stats.status == :exception   stp.meta.exception      = true end #available ≥ 0.2.6
   =#
   stp = stats_status_to_meta!(stp, stats)
 
@@ -53,14 +54,16 @@ function NLPModelsIpopt.ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwar
   end
 
   stp.meta.nb_of_stop = stats.iter
-  #stats.elapsed_time
+  Stopping._update_time!(stp.current_state, time()) # stats.elapsed_time
 
-  x = stats.solution
+  success = stats.status ∈ [:first_order, :acceptable]
+  if (success && fill_in_on_success) || (!success && fill_in_on_failure)
+    x = stats.solution
+    # Not mandatory, but in case some entries of the State are used to stop
+    fill_in!(stp, x, Hx = stp.current_state.Hx)
 
-  #Not mandatory, but in case some entries of the State are used to stop
-  fill_in!(stp, x, Hx = stp.current_state.Hx) #too slow
-
-  stop!(stp)
+    stop!(stp)
+  end
 
   return stp
 end
