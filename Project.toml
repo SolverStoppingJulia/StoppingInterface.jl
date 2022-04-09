@@ -14,13 +14,13 @@ Stopping = "c4fe5a9e-e7fb-5c3d-89d5-7f405ab2214f"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-julia = "^1.6"
-JSOSolvers = "0.7"
+JSOSolvers = "0.7, 0.8"
 NLPModels = "0.17, 0.18"
 NLPModelsIpopt = "0.7, 0.8, 0.9"
 Requires = "1"
 SolverCore = "0.2"
 Stopping = "0.3, 0.4"
+julia = "^1.6"
 
 [extras]
 ADNLPModels = "54578032-b7ea-4c30-94aa-7cbd1cce6c9a"
