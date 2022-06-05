@@ -32,7 +32,7 @@ stp.current_state.fx # contains the optimal value
 stp.current_state.gx # contains the gradient
 ```
 
-We refer to [Stopping.jl](https://github.com/vepiteski/Stopping.jl) for more documentation and [StoppingTutorials.jl](https://solverstoppingjulia.github.io/StoppingTutorials.jl/dev/) for tutorials.
+We refer to [Stopping.jl](https://github.com/SolverStoppingJulia/Stopping.jl) for more documentation and [StoppingTutorials.jl](https://solverstoppingjulia.github.io/StoppingTutorials.jl/dev/) for tutorials.
 
 # Bug reports and discussions
 
