@@ -15,7 +15,7 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
 JSOSolvers = "0.7, 0.8"
-NLPModels = "0.17, 0.18"
+NLPModels = "0.17, 0.18, 0.19"
 NLPModelsIpopt = "0.7, 0.8, 0.9"
 Requires = "1"
 SolverCore = "0.2"
