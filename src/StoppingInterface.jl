@@ -12,8 +12,7 @@ include("stopping_to_jsosolvers.jl")
 using NLPModelsIpopt
 include("stopping_to_nlpmodels_ipopt.jl")
 
-using Requires
-is_knitro_installed = false
+using KNITRO, NLPModelsKnitro
 include("stopping_to_nlpmodels_knitro.jl")
 
 end # module
