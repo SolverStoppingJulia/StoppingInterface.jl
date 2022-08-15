@@ -1,7 +1,7 @@
 name = "StoppingInterface"
 uuid = "53949629-e8ff-437b-b6e7-14da1a85bf25"
 authors = ["tmigot <tangi.migot@gmail.com>"]
-version = "0.2.0"
+version = "0.2.1"
 
 [deps]
 JSOSolvers = "10dff2fc-5484-5881-a0e0-c90441020f8a"
