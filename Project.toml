@@ -18,12 +18,12 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 [compat]
 JSOSolvers = "0.7, 0.8"
 KNITRO = "0.13"
-NLPModels = "0.17, 0.18"
+NLPModels = "0.17, 0.18, 0.19"
 NLPModelsIpopt = "0.7, 0.8, 0.9"
-NLPModelsKnitro = "0.5"
+NLPModelsKnitro = "0.5, 0.6"
 Requires = "1"
 SolverCore = "0.2"
-Stopping = "0.3, 0.4"
+Stopping = "0.3, 0.4, 0.5"
 julia = "^1.6"
 
 [extras]
