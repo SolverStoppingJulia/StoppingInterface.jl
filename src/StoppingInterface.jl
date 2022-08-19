@@ -1,6 +1,6 @@
 module StoppingInterface
 
-using LinearAlgebra, Stopping
+using LinearAlgebra, SparseArrays, Stopping
 
 using SolverCore
 include("stopping_to_jso_stats.jl")
