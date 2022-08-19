@@ -65,8 +65,10 @@ function NLPModelsIpopt.ipopt(
   success = stats.status ∈ [:first_order, :acceptable]
   if (success && fill_in_on_success) || (!success && fill_in_on_failure)
     x = stats.solution
+    λ = stats.multipliers 
+    μ = stats.multipliers_L - stats.multipliers_U
     # Not mandatory, but in case some entries of the State are used to stop
-    fill_in!(stp, x, Hx = stp.current_state.Hx)
+    fill_in!(stp, x, lambda = λ, mu = μ, Hx = stp.current_state.Hx)
 
     stop!(stp)
   end
