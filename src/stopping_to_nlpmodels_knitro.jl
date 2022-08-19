@@ -164,8 +164,8 @@ if KNITRO.has_knitro()
     if stp.pb.meta.ncon > 0
       stp.current_state.cx = KNITRO.KN_get_con_values(solver.kc)
       stp.current_state.Jx = sparse(
-        KNITRO.KN_get_jacobian_values(solver.kc)[1],
-        KNITRO.KN_get_jacobian_values(solver.kc)[2],
+        KNITRO.KN_get_jacobian_values(solver.kc)[1] .+ 1,
+        KNITRO.KN_get_jacobian_values(solver.kc)[2] .+ 1,
         KNITRO.KN_get_jacobian_values(solver.kc)[3],
         stp.pb.meta.ncon,
         stp.pb.meta.nvar,
