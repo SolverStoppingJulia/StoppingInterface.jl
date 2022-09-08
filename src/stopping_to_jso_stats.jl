@@ -1,11 +1,4 @@
-"""
-    `status_stopping_to_stats(stp::AbstractStopping)`
-
-Return the status in GenericExecutionStats from a Stopping.
-"""
-function status_stopping_to_stats(stp::AbstractStopping)
-  stp_status = status(stp)
-  convert = Dict([
+const convert = Dict([
     (:Optimal, :first_order),
     (:SubProblemFailure, :unknown),
     (:SubOptimal, :acceptable),
@@ -22,6 +15,14 @@ function status_stopping_to_stats(stp::AbstractStopping)
     (:Exception, :exception),
     (:Unknown, :unknown),
   ])
+
+"""
+    `status_stopping_to_stats(stp::AbstractStopping)`
+
+Return the status in GenericExecutionStats from a Stopping.
+"""
+function status_stopping_to_stats(stp::AbstractStopping)
+  stp_status = status(stp)
   return convert[stp_status]
 end
 
