@@ -1,20 +1,20 @@
 const convert = Dict([
-    (:Optimal, :first_order),
-    (:SubProblemFailure, :unknown),
-    (:SubOptimal, :acceptable),
-    (:Unbounded, :unbounded),
-    (:UnboundedPb, :unbounded),
-    (:Stalled, :stalled),
-    (:IterationLimit, :max_iter),
-    (:TimeLimit, :max_time),
-    (:EvaluationLimit, :max_eval),
-    (:ResourcesOfMainProblemExhausted, :max_eval),
-    (:Infeasible, :infeasible),
-    (:DomainError, :exception),
-    (:StopByUser, :user),
-    (:Exception, :exception),
-    (:Unknown, :unknown),
-  ])
+  (:Optimal, :first_order),
+  (:SubProblemFailure, :unknown),
+  (:SubOptimal, :acceptable),
+  (:Unbounded, :unbounded),
+  (:UnboundedPb, :unbounded),
+  (:Stalled, :stalled),
+  (:IterationLimit, :max_iter),
+  (:TimeLimit, :max_time),
+  (:EvaluationLimit, :max_eval),
+  (:ResourcesOfMainProblemExhausted, :max_eval),
+  (:Infeasible, :infeasible),
+  (:DomainError, :exception),
+  (:StopByUser, :user),
+  (:Exception, :exception),
+  (:Unknown, :unknown),
+])
 
 """
     `status_stopping_to_stats(stp::AbstractStopping)`
