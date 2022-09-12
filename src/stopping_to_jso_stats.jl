@@ -75,7 +75,7 @@ function stats_status_to_meta!(stp::AbstractStopping, status::Symbol)
   if status == :max_time
     stp.meta.tired = true
   end
-  if status ∈ [:neg_pred, :not_desc]
+  if status ∈ (:neg_pred, :not_desc)
     stp.meta.fail_sub_pb = true
   end
   if status == :unbounded
@@ -84,7 +84,7 @@ function stats_status_to_meta!(stp::AbstractStopping, status::Symbol)
   if status == :user
     stp.meta.stopbyuser = true
   end
-  if status ∈ [:stalled, :small_residual, :small_step]
+  if status ∈ (:stalled, :small_residual, :small_step)
     stp.meta.stalled = true
   end
   if status == :exception
