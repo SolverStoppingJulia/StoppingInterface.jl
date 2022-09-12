@@ -24,7 +24,7 @@ NLPModelsIpopt = "0.7, 0.8, 0.9"
 NLPModelsKnitro = "0.5, 0.6"
 Requires = "1"
 SolverCore = "0.2"
-Stopping = "0.3, 0.4, 0.5"
+Stopping = "0.6"
 julia = "^1.6"
 
 [extras]
