@@ -1,5 +1,6 @@
 import JSOSolvers: lbfgs, trunk, tron
-for (fun, Solver) in ((:R2, :R2Solver), (:lbfgs, :LBFGSSolver), (:tron, TronSolver), (:trunk, :TrunkSolver))
+for (fun, Solver) in
+    ((:R2, :R2Solver), (:lbfgs, :LBFGSSolver), (:tron, TronSolver), (:trunk, :TrunkSolver))
   premeth = Meta.parse("JSOSolvers." * string(fun))
   @eval begin
     @doc """
@@ -10,10 +11,7 @@ for (fun, Solver) in ((:R2, :R2Solver), (:lbfgs, :LBFGSSolver), (:tron, TronSolv
     if the problem is a success (`:first_order` or `:acceptable`) and `fill_in_on_success` is true or if it failed and `fill_in_on_failure` is true.
     The keyword arguments are passed to the $($fun) call.
     """
-    function $premeth(
-      stp::NLPStopping;
-      kwargs...,
-    )
+    function $premeth(stp::NLPStopping; kwargs...)
       nlp = stp.pb
       solver = $Solver(nlp)
       stats = GenericExecutionStats(nlp)
