@@ -13,6 +13,18 @@ Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPT
 """
 function NLPModelsIpopt.ipopt(
   stp::NLPStopping;
+  kwargs...,
+)
+  nlp = stp.pb
+  solver = IpoptSolver(nlp)
+  stats = GenericExecutionStats(nlp)
+  return solve!(solver, stp, stats; kwargs...)
+end
+
+function SolverCore.solve!(
+  solver::IpoptSolver,
+  stp::NLPStopping,
+  stats::GenericExecutionStats;
   subsolver_verbose::Int = 0,
   fill_in_on_success = true,
   fill_in_on_failure = true,
@@ -21,8 +33,10 @@ function NLPModelsIpopt.ipopt(
   stp.meta.start_time = time()
   #xk = solveIpopt(stop.pb, stop.current_state.x)
   nlp = stp.pb
-  stats = ipopt(
-    nlp;
+  stats = solve!(
+    solver,
+    nlp,
+    stats;
     print_level = subsolver_verbose,
     tol = stp.meta.rtol,
     x0 = stp.current_state.x,
