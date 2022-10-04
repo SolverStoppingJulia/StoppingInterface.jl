@@ -123,16 +123,7 @@ if KNITRO.has_knitro()
     xtol_iters::Int = 2, # 3 # *New*
     kwargs...,
   )
-    @assert -1 ≤ convex ≤ 1
-    @assert 1 ≤ hessopt ≤ 7
-    @assert 0 ≤ out_hints ≤ 1
-    @assert 0 ≤ subsolver_verbose ≤ 6
-    @assert 0 ≤ maxit
-
-    stp.meta.start_time = time()
     nlp = stp.pb
-    #y0 = stp.current_state.lambda #si défini
-    #z0 = stp.current_state.mu #si défini 
     solver = NLPModelsKnitro.KnitroSolver(
       nlp,
       x0 = stp.current_state.x,
@@ -153,7 +144,27 @@ if KNITRO.has_knitro()
       outlev = subsolver_verbose;
       kwargs...,
     )
-    stats = NLPModelsKnitro.knitro!(nlp, solver)
+    stats = GenericExecutionStats(nlp)
+    return solve!(solver, stp, stats; kwargs...)
+  end
+
+  function SolverCore.solve!(
+    solver::KnitroSolver,
+    stp::NLPStopping,
+    stats::GenericExecutionStats;
+    kwargs...,
+  )
+    @assert -1 ≤ convex ≤ 1
+    @assert 1 ≤ hessopt ≤ 7
+    @assert 0 ≤ out_hints ≤ 1
+    @assert 0 ≤ subsolver_verbose ≤ 6
+    @assert 0 ≤ maxit
+
+    stp.meta.start_time = time()
+    nlp = stp.pb
+    #y0 = stp.current_state.lambda #si défini
+    #z0 = stp.current_state.mu #si défini 
+    stats = NLPModelsKnitro.solve!(solver, nlp, stats)
     #@show stats.status, stats.solver_specific[:internal_msg]
     #if stats.status ∉ (:unbounded, :exception, :unknown) #∈ (:first_order, :acceptable) 
     stp.current_state.x = stats.solution
