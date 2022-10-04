@@ -28,7 +28,7 @@ for (fun, Solver) in ((:R2, :R2Solver), (:lbfgs, :LBFGSSolver), (:tron, TronSolv
       fill_in_on_success = true,
       fill_in_on_failure = true,
       kwargs...,
-    ) where {T, V}
+    )
       max_ev = if :neval_obj in keys(stp.meta.max_cntrs)
         stp.meta.max_cntrs[:neval_obj]
       else
