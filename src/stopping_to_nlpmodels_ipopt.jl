@@ -11,10 +11,7 @@ if the problem is a success (`:first_order` or `:acceptable`) and `fill_in_on_su
 Other keyword arguments are passed to the `ipopt` call.
 Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPTIONS_REF).
 """
-function NLPModelsIpopt.ipopt(
-  stp::NLPStopping;
-  kwargs...,
-)
+function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
   nlp = stp.pb
   solver = IpoptSolver(nlp)
   stats = GenericExecutionStats(nlp)
