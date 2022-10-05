@@ -35,8 +35,8 @@ function stopping_to_stats(stp::NLPStopping)
   nlp = stp.pb
   cx = stp.current_state.cx
   return GenericExecutionStats(
-    status_stopping_to_stats(stp),
     stp.pb,
+    status = status_stopping_to_stats(stp),
     solution = stp.current_state.x,
     objective = stp.current_state.fx,
     primal_feas = get_ncon(nlp) == 0 ? zero(eltype(cx)) :
