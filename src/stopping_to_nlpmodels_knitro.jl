@@ -154,12 +154,6 @@ if KNITRO.has_knitro()
     stats::GenericExecutionStats;
     kwargs...,
   )
-    @assert -1 ≤ convex ≤ 1
-    @assert 1 ≤ hessopt ≤ 7
-    @assert 0 ≤ out_hints ≤ 1
-    @assert 0 ≤ subsolver_verbose ≤ 6
-    @assert 0 ≤ maxit
-
     stp.meta.start_time = time()
     nlp = stp.pb
     #y0 = stp.current_state.lambda #si défini
