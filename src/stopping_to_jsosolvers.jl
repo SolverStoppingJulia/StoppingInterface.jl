@@ -1,6 +1,6 @@
 import JSOSolvers: lbfgs, trunk, tron
 for (fun, Solver) in
-    ((:R2, :R2Solver), (:lbfgs, :LBFGSSolver), (:tron, TronSolver), (:trunk, :TrunkSolver))
+    ((:R2, :R2Solver), (:lbfgs, :LBFGSSolver), (:tron, :TronSolver), (:trunk, :TrunkSolver))
   premeth = Meta.parse("JSOSolvers." * string(fun))
   @eval begin
     @doc """
@@ -14,8 +14,7 @@ for (fun, Solver) in
     function $premeth(stp::NLPStopping; kwargs...)
       nlp = stp.pb
       solver = $Solver(nlp)
-      stats = GenericExecutionStats(nlp)
-      return solve!(solver, stp, stats; kwargs...)
+      return solve!(solver, stp; kwargs...)
     end
 
     function SolverCore.solve!(

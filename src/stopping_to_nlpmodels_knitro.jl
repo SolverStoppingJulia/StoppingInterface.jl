@@ -144,8 +144,7 @@ if KNITRO.has_knitro()
       outlev = subsolver_verbose;
       kwargs...,
     )
-    stats = GenericExecutionStats(nlp)
-    return solve!(solver, stp, stats; kwargs...)
+    return solve!(solver, stp; kwargs...)
   end
 
   function SolverCore.solve!(
