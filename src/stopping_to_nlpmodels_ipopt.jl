@@ -12,10 +12,8 @@ Other keyword arguments are passed to the `ipopt` call.
 Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPTIONS_REF).
 """
 function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
-  nlp = stp.pb
-  solver = IpoptSolver(nlp)
-  stats = GenericExecutionStats(nlp)
-  return solve!(solver, stp, stats; kwargs...)
+  solver = IpoptSolver(stp.pb)
+  return solve!(solver, stp; kwargs...)
 end
 
 function SolverCore.solve!(
