@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Tutorial · StoppingInterface.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/style.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">StoppingInterface.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Tutorial</a><ul class="internal"><li><a class="tocitem" href="#StoppingInterface-Tutorial:-use-a-buffer"><span>StoppingInterface Tutorial: use a buffer</span></a></li></ul></li><li><a class="tocitem" href="../reference/">Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Tutorial</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Tutorial</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SolverStoppingJulia/StoppingInterface.jl/blob/master/docs/src/tutorial.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Tutorial"><a class="docs-heading-anchor" href="#Tutorial">Tutorial</a><a id="Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial" title="Permalink"></a></h1><ul><li><a href="#Tutorial">Tutorial</a></li><ul><li><a href="#StoppingInterface-Tutorial:-use-a-buffer">StoppingInterface Tutorial: use a buffer</a></li></ul></ul><p>The <code>StoppingInterface</code> package offers a Stopping-compatible buffer of external solvers. The current list includes:</p><ul><li><code>ipopt</code> via <a href="https://github.com/JuliaSmoothOptimizers/NLPModelsIpopt.jl">NLPModelsIpopt.jl</a>;</li><li><code>knitro</code> via <a href="https://github.com/JuliaSmoothOptimizers/NLPModelsKnitro.jl">NLPModelsKnitro.jl</a>;</li><li><code>lbfgs</code>, <code>tron</code> and <code>trunk</code> via <a href="https://github.com/JuliaSmoothOptimizers/NLPModelsIpopt.jl">JSOSolvers.jl</a>.</li></ul><p>We explain below how to design your buffer.</p><h2 id="StoppingInterface-Tutorial:-use-a-buffer"><a class="docs-heading-anchor" href="#StoppingInterface-Tutorial:-use-a-buffer">StoppingInterface Tutorial: use a buffer</a><a id="StoppingInterface-Tutorial:-use-a-buffer-1"></a><a class="docs-heading-anchor-permalink" href="#StoppingInterface-Tutorial:-use-a-buffer" title="Permalink"></a></h2><p>In the case where one algorithm/solver is not Stopping-compatible, a buffer solver is required to unify the formalism.</p><p>We illustrate this situation here with the Ipopt solver.</p><p><strong>Remark in the buffer function:</strong> If the solver stops with success but the stopping condition is not satisfied, one option is to iterate and reduce the various tolerances.</p><pre><code class="language-julia">using Ipopt, ADNLPModels, NLPModelsIpopt, Stopping
+nlp = ADNLPModel(x -&gt; (x[1] - 1)^2 + 100 * (x[2] - x[1]^2)^2, [-1.2; 1.0])</code></pre><pre class="documenter-example-output">ADNLPModel - Model with automatic differentiation backend ADNLPModels.ADModelBackend{ADNLPModels.ForwardDiffADGradient, ADNLPModels.ForwardDiffADHvprod, ADNLPModels.ForwardDiffADJprod, ADNLPModels.ForwardDiffADJtprod, ADNLPModels.ForwardDiffADJacobian, ADNLPModels.ForwardDiffADHessian, ADNLPModels.ForwardDiffADGHjvprod}(ADNLPModels.ForwardDiffADGradient(ForwardDiff.GradientConfig{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}, Float64, 2, Vector{ForwardDiff.Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}, Float64, 2}}}((Partials(1.0, 0.0), Partials(0.0, 1.0)), ForwardDiff.Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}, Float64, 2}[Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}}(2.121995791e-314,2.1219957915e-314,2.1219957915e-314), Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}}(2.1219957915e-314,2.1219957915e-314,6.94720202004125e-310)])), ADNLPModels.ForwardDiffADHvprod(), ADNLPModels.ForwardDiffADJprod(), ADNLPModels.ForwardDiffADJtprod(), ADNLPModels.ForwardDiffADJacobian(0), ADNLPModels.ForwardDiffADHessian(3), ADNLPModels.ForwardDiffADGHjvprod())
+  Problem name: Generic
+   All variables: ████████████████████ 2      All constraints: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+            free: ████████████████████ 2                 free: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           lower: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                lower: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           upper: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                upper: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+         low/upp: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0              low/upp: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           fixed: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                fixed: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+          infeas: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               infeas: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+            nnzh: (  0.00% sparsity)   3               linear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+                                                    nonlinear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+                                                         nnzj: (------% sparsity)         
+
+  Counters:
+             obj: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 grad: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 cons: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+        cons_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0             cons_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 jcon: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           jgrad: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                  jac: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0              jac_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+         jac_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                jprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0            jprod_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+       jprod_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               jtprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0           jtprod_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+      jtprod_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 hess: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                hprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           jhess: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               jhprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+</pre><p>The traditional way to solve an optimization problem using <a href="https://github.com/JuliaSmoothOptimizers/NLPModelsIpopt.jl">NLPModelsIpopt</a>.</p><pre><code class="language-julia">stats = ipopt(nlp, print_level = 0)</code></pre><pre class="documenter-example-output">&quot;Execution stats: first-order stationary&quot;</pre><p>Use <code>y0</code> (general),<code>zL</code> (lower bound), and <code>zU</code> (upper bound) for the initial guess of Lagrange multipliers.</p><p>Using Stopping, the idea is to create a buffer function.</p><pre><code class="language-julia">function solveIpopt(stp :: NLPStopping)
+
+  stats = ipopt(nlp, print_level     = 0,
+                     tol             = stp.meta.rtol,
+                     x0              = stp.current_state.x,
+                     max_iter        = stp.meta.max_iter,
+                     max_cpu_time    = stp.meta.max_time,
+                     dual_inf_tol    = stp.meta.atol,
+                     constr_viol_tol = stp.meta.atol,
+                     compl_inf_tol   = stp.meta.atol)
+
+  # Update the meta boolean with the output message
+  if stats.status == :first_order stp.meta.suboptimal      = true end
+  if stats.status == :acceptable  stp.meta.suboptimal      = true end
+  if stats.status == :infeasible  stp.meta.infeasible      = true end
+  if stats.status == :small_step  stp.meta.stalled         = true end
+  if stats.status == :max_iter    stp.meta.iteration_limit = true end
+  if stats.status == :max_time    stp.meta.tired           = true end
+
+  stp.meta.nb_of_stop = stats.iter
+  x = stats.solution
+
+  # Not mandatory, but in case some entries of the State are used to stop
+  fill_in!(stp, x)
+  stop!(stp)
+
+  return stp
+end</code></pre><pre class="documenter-example-output">solveIpopt (generic function with 1 method)</pre><p>We now illustrate the use of the buffer function. First, we define a <code>NLPAtX</code> state, a <code>NLPStopping</code> and use <code>unconstrained_check</code> optimality function.</p><pre><code class="language-julia">nlp_at_x = NLPAtX(nlp.meta.x0)
+stop = NLPStopping(nlp, nlp_at_x, optimality_check = unconstrained_check)</code></pre><pre class="documenter-example-output">Stopping.NLPStopping{ADNLPModel{Float64, Vector{Float64}, Vector{Int64}}, Stopping.StoppingMeta{Float64, Float64, Nothing, Stopping.var&quot;#46#54&quot;, Stopping.var&quot;#47#55&quot;{Stopping.var&quot;#46#54&quot;}, typeof(Stopping.unconstrained_check)}, Stopping.StopRemoteControl, Stopping.NLPAtX{Float64, Float64, Vector{Float64}}, Stopping.VoidStopping{Any, Stopping.StoppingMeta, Stopping.StopRemoteControl, Stopping.GenericState, Nothing, Stopping.VoidListofStates}, Stopping.VoidListofStates}
+It has no main_stp.
+It doesn&#39;t keep track of the state history.
+Problem is ADNLPModel - Model with automatic differentiation backend ADNLPModels.ADModelBackend{ADNLPModels.ForwardDiffADGradient, ADNLPModels.ForwardDiffADHvprod, ADNLPModels.ForwardDiffADJprod, ADNLPModels.ForwardDiffADJtprod, ADNLPModels.ForwardDiffADJacobian, ADNLPModels.ForwardDiffADHessian, ADNLPModels.ForwardDiffADGHjvprod}(ADNLPModels.ForwardDiffADGradient(ForwardDiff.GradientConfig{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}, Float64, 2, Vector{ForwardDiff.Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}, Float64, 2}}}((Partials(1.0, 0.0), Partials(0.0, 1.0)), ForwardDiff.Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}, Float64, 2}[Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}}(0.9999999999400667,1.0,0.0), Dual{ForwardDiff.Tag{Main.var&quot;ex-1&quot;.var&quot;#1#2&quot;, Float64}}(0.9999999998789006,0.0,1.0)])), ADNLPModels.ForwardDiffADHvprod(), ADNLPModels.ForwardDiffADJprod(), ADNLPModels.ForwardDiffADJtprod(), ADNLPModels.ForwardDiffADJacobian(0), ADNLPModels.ForwardDiffADHessian(3), ADNLPModels.ForwardDiffADGHjvprod())
+  Problem name: Generic
+   All variables: ████████████████████ 2      All constraints: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+            free: ████████████████████ 2                 free: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           lower: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                lower: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           upper: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                upper: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+         low/upp: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0              low/upp: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           fixed: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                fixed: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+          infeas: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               infeas: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+            nnzh: (  0.00% sparsity)   3               linear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+                                                    nonlinear: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+                                                         nnzj: (------% sparsity)         
+
+  Counters:
+             obj: ████████████████████ 45                grad: ███████████⋅⋅⋅⋅⋅⋅⋅⋅⋅ 23                cons: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+        cons_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0             cons_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 jcon: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           jgrad: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                  jac: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0              jac_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+         jac_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                jprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0            jprod_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+       jprod_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               jtprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0           jtprod_lin: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+      jtprod_nln: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0                 hess: ██████████⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 21               hprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+           jhess: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0               jhprod: ⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 0     
+ No user-defined structure is furnished.
+</pre><p>In a first scenario, we solve again the problem with the buffer solver.</p><pre><code class="language-julia">solveIpopt(stop)
+stop.current_state.x, status(stop), stop.meta.nb_of_stop</code></pre><pre class="documenter-example-output">([1.0, 1.0], :Optimal, 23)</pre><p>In a second scenario, we check the control on the maximum number of iterations.</p><pre><code class="language-julia">nbiter = stop.meta.nb_of_stop
+reinit!(stop, rstate = true, x = nlp.meta.x0) #rstate is set as true to allow reinit! modifying the State
+stop.meta.max_iter = max(nbiter - 4, 1)
+
+solveIpopt(stop)
+# Final status is :IterationLimit
+stop.current_state.x, status(stop)</code></pre><pre class="documenter-example-output">([0.999479379059692, 0.9989483423579948], :IterationLimit)</pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 18 October 2022 21:04">Tuesday 18 October 2022</span>. Using Julia version 1.8.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
