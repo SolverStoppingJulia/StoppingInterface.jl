@@ -15,4 +15,9 @@ include("stopping_to_nlpmodels_ipopt.jl")
 using KNITRO, NLPModelsKnitro
 include("stopping_to_nlpmodels_knitro.jl")
 
+function SolverCore.solve!(solver::AbstractOptimizationSolver, stp::NLPStopping; kwargs...)
+  stats = GenericExecutionStats(stp.pb)
+  solve!(solver, stp, stats; kwargs...)
+end
+
 end # module
