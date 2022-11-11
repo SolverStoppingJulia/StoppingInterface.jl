@@ -20,7 +20,7 @@ You need to first add `using Knitro, NLPModelsKnitro` before calling the functio
 ## Example
 
 ```julia
-using ADNLPModels, Stopping, StoppingInterface
+using ADNLPModels, JSOSolvers, Stopping, StoppingInterface
 
 # Rosenbrock
 nlp = ADNLPModel(x -> (x[1] - 1)^2 + 100 * (x[2] - x[1]^2)^2, [-1.2; 1.0])
