@@ -1,5 +1,3 @@
-import NLPModelsIpopt: ipopt
-
 """
     `ipopt(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
 
@@ -12,12 +10,12 @@ Other keyword arguments are passed to the `ipopt` call.
 Selection of possible [options](https://coin-or.github.io/Ipopt/OPTIONS.html#OPTIONS_REF).
 """
 function NLPModelsIpopt.ipopt(stp::NLPStopping; kwargs...)
-  solver = IpoptSolver(stp.pb)
+  solver = NLPModelsIpopt.IpoptSolver(stp.pb)
   return solve!(solver, stp; kwargs...)
 end
 
 function SolverCore.solve!(
-  solver::IpoptSolver,
+  solver::NLPModelsIpopt.IpoptSolver,
   stp::NLPStopping,
   stats::GenericExecutionStats;
   subsolver_verbose::Int = 0,
