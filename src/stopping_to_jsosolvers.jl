@@ -16,7 +16,8 @@ This function calls `fill_in!` (doesn't update hessian) and `stop!` after lbfgs 
 if the problem is a success (`:first_order` or `:acceptable`) and `fill_in_on_success` is true or if it failed and `fill_in_on_failure` is true.
 The keyword arguments are passed to the lbfgs call.
 """
-JSOSolvers.lbfgs(stp::NLPStopping; kwargs...) = solve!(JSOSolvers.LBFGSSolver(stp.pb), stp; kwargs...)
+JSOSolvers.lbfgs(stp::NLPStopping; kwargs...) =
+  solve!(JSOSolvers.LBFGSSolver(stp.pb), stp; kwargs...)
 
 """
     `tron(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
@@ -36,10 +37,16 @@ This function calls `fill_in!` (doesn't update hessian) and `stop!` after trunk 
 if the problem is a success (`:first_order` or `:acceptable`) and `fill_in_on_success` is true or if it failed and `fill_in_on_failure` is true.
 The keyword arguments are passed to the trunk call.
 """
-JSOSolvers.trunk(stp::NLPStopping; kwargs...) = solve!(JSOSolvers.TrunkSolver(stp.pb), stp; kwargs...)
+JSOSolvers.trunk(stp::NLPStopping; kwargs...) =
+  solve!(JSOSolvers.TrunkSolver(stp.pb), stp; kwargs...)
 
 function SolverCore.solve!(
-  solver::Union{JSOSolvers.R2Solver, JSOSolvers.LBFGSSolver, JSOSolvers.TronSolver, JSOSolvers.TrunkSolver},
+  solver::Union{
+    JSOSolvers.R2Solver,
+    JSOSolvers.LBFGSSolver,
+    JSOSolvers.TronSolver,
+    JSOSolvers.TrunkSolver,
+  },
   stp::NLPStopping,
   stats::GenericExecutionStats;
   subsolver_verbose::Int = 0,
