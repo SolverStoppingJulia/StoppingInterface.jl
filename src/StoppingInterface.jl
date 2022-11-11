@@ -1,19 +1,25 @@
 module StoppingInterface
 
-using LinearAlgebra, SparseArrays, Stopping
+using LinearAlgebra, NLPModels, Requires, SparseArrays, Stopping
 
 using SolverCore
 include("stopping_to_jso_stats.jl")
 export status_stopping_to_stats, stopping_to_stats
 
-using JSOSolvers, NLPModels
-include("stopping_to_jsosolvers.jl")
+@init begin
+  @require JSOSolvers = "10dff2fc-5484-5881-a0e0-c90441020f8a" begin
+    include("stopping_to_jsosolvers.jl")
+  end
 
-using NLPModelsIpopt
-include("stopping_to_nlpmodels_ipopt.jl")
+  @require NLPModelsIpopt = "f4238b75-b362-5c4c-b852-0801c9a21d71" begin
+    include("stopping_to_nlpmodels_ipopt.jl")
+  end
 
-using KNITRO, NLPModelsKnitro
-include("stopping_to_nlpmodels_knitro.jl")
+  @require NLPModelsKnitro = "bec4dd0d-7755-52d5-9a02-22f0ffc7efcb" begin
+    using KNITRO
+    include("stopping_to_nlpmodels_knitro.jl")
+  end
+end
 
 function SolverCore.solve!(solver::AbstractOptimizationSolver, stp::NLPStopping; kwargs...)
   stats = GenericExecutionStats(stp.pb)
