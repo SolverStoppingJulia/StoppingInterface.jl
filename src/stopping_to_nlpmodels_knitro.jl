@@ -87,7 +87,6 @@ outlev: Controls the level of output produced by Knitro
 =#
 
 if KNITRO.has_knitro()
-
   """
       `knitro(stp::NLPStopping; subsolver_verbose::Int = 0, kwargs...)`
 
