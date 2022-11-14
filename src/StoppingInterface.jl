@@ -16,8 +16,9 @@ export status_stopping_to_stats, stopping_to_stats
   end
 
   @require NLPModelsKnitro = "bec4dd0d-7755-52d5-9a02-22f0ffc7efcb" begin
-    using KNITRO
-    include("stopping_to_nlpmodels_knitro.jl")
+    @require KNITRO = "67920dd8-b58e-52a8-8622-53c4cffbe346" begin
+      include("stopping_to_nlpmodels_knitro.jl")
+    end
   end
 end
 
