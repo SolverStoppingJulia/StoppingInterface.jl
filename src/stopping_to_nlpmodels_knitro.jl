@@ -146,7 +146,7 @@ if KNITRO.has_knitro()
   end
 
   function SolverCore.solve!(
-    solver::KnitroSolver,
+    solver::NLPModelsKnitro.KnitroSolver,
     stp::NLPStopping,
     stats::GenericExecutionStats;
     kwargs...,
